@@ -6,4 +6,4 @@
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::THEME, 'frontend/GardenLawn/Automowtheme', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::THEME, 'frontend/GardenLawn/Amrobotstheme', __DIR__);

@@ -1,6 +1,6 @@
 {
     "name": "gardenlawn/amrobotstheme",
-    "description": "automowtheme",
+    "description": "amrobotstheme",
     "type": "magento2-theme",
     "config": {
         "sort-packages": true
@@ -17,7 +17,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "GardenLawn\\Automowtheme\\": ""
+            "GardenLawn\\Amrobotstheme\\": ""
         }
     },
     "authors": [
