@@ -21,7 +21,7 @@ use Hyva\Theme\ViewModel\HeroiconsOutline;
 $recaptcha = $viewModels->require(ReCaptcha::class);
 $heroicons = $viewModels->require(HeroiconsOutline::class);
 ?>
-<div class="w-full">
+<div class="w-full max-w-3xl mx-auto">
     <div class="py-6 prose">
         <h2 class="text-2xl font-bold mb-4"><?= $escaper->escapeHtml(__('Become a Dealer')) ?></h2>
         <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
