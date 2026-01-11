@@ -87,12 +87,11 @@ $isAutocompleteEnabled = $block->getConfig('customer/password/autocomplete_on_st
                 <input type="hidden" name="error_url" value="<?= $escaper->escapeUrl($block->getErrorUrl()) ?>">
                 <?= $block->getLayout()->createBlock(NameWidget::class)->setObject($block->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>
 
-                <div class="field taxvat required">
-                    <label for="taxvat" class="label"><span><?= $escaper->escapeHtml(__('VAT Number')) ?></span></label>
-                    <div class="control">
-                        <input type="text" name="taxvat" id="taxvat" value="<?= $escaper->escapeHtmlAttr($block->getFormData()->getTaxvat()) ?>" title="<?= $escaper->escapeHtmlAttr(__('VAT Number')) ?>" class="form-input w-full" required data-validate='{"required":true}'>
-                    </div>
-                </div>
+                <?php /* Use Taxvat widget which includes CEIDG lookup logic */ ?>
+                <?php $taxvat = $block->getLayout()->createBlock(Taxvat::class) ?>
+                <?php if ($taxvat->isEnabled()): ?>
+                    <?= $taxvat->setTaxvat($block->getFormData()->getTaxvat())->toHtml() ?>
+                <?php endif ?>
 
                 <?php if ($block->isNewsletterEnabled()): ?>
                     <div class="field choice newsletter">
@@ -117,12 +116,6 @@ $isAutocompleteEnabled = $block->getConfig('customer/password/autocomplete_on_st
                 <?php $dob = $block->getLayout()->createBlock(Dob::class) ?>
                 <?php if ($dob->isEnabled()): ?>
                     <?= $dob->setDate($block->getFormData()->getDob())->toHtml() ?>
-                <?php endif ?>
-
-                <?php /* Taxvat is added manually above, but we keep this check if it's enabled in config to avoid duplication if someone enables it there too, although standard hyva template uses widget */ ?>
-                <?php $taxvat = $block->getLayout()->createBlock(Taxvat::class) ?>
-                <?php if ($taxvat->isEnabled() && false): /* Disabled here to avoid duplication with manual field above */ ?>
-                    <?= $taxvat->setTaxvat($block->getFormData()->getTaxvat())->toHtml() ?>
                 <?php endif ?>
 
                 <?php $gender = $block->getLayout()->createBlock(Gender::class) ?>
@@ -377,7 +370,7 @@ $isAutocompleteEnabled = $block->getConfig('customer/password/autocomplete_on_st
                                     >
                                     </option>
                                 </template>
-                            select>
+                            </select>
                         </template>
                         <input :type="hasAvailableRegions() && (isRegionRequired || showOptionalRegions) ? 'hidden' : 'text'"
                                id="region"
