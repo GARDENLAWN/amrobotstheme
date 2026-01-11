@@ -1,8 +1,35 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_form_validation"/>
     <body>
         <referenceContainer name="content">
-            <block class="Magento\Customer\Block\Form\Register" name="dealer.register.form" template="Magento_Customer::form/dealer-register.phtml" after="-"/>
+            <!-- Keep class name with typo "registation-container" for backwards compatibility -->
+            <container name="dealer.register.container" label="Dealer Register Container" htmlTag="div" htmlClass="registration-container registation-container container p-0">
+                <block class="Magento\Customer\Block\Form\Register" name="customer_form_register" template="Magento_Customer::form/dealer-register.phtml" cacheable="false">
+                    <arguments>
+                        <argument name="attribute_data" xsi:type="object">Magento\Customer\Block\DataProviders\AddressAttributeData</argument>
+                        <argument name="post_code_config" xsi:type="object">Magento\Customer\Block\DataProviders\PostCodesPatternsAttributeData</argument>
+                        <argument name="viewModelRecaptcha" xsi:type="object">Hyva\Theme\ViewModel\ReCaptcha</argument>
+                    </arguments>
+                    <container name="form.additional.info" as="form_additional_info"/>
+                    <container name="fieldset.create.info.additional" as="fieldset_create_info_additional"/>
+                    <container name="customer.form.register.fields.before" as="form_fields_before" label="Form Fields Before" htmlTag="div" htmlClass="customer-form-before"/>
+                </block>
+            </container>
         </referenceContainer>
+
+        <referenceContainer name="form.additional.info">
+            <block name="form_additional_info_customer" template="Magento_Customer::additionalinfocustomer.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block name="password.validate.js" template="Magento_Customer::js/password-validation.phtml"/>
+        </referenceContainer>
+
+        <referenceBlock name="topmenu_generic">
+            <arguments>
+                <argument name="cache_lifetime" xsi:type="boolean">false</argument>
+            </arguments>
+        </referenceBlock>
     </body>
 </page>
