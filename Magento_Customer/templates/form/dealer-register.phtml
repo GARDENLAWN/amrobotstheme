@@ -1,0 +1,130 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Magento\Customer\Block\Form\Register;
+use Magento\Framework\Escaper;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ReCaptcha;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var Register $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var ReCaptcha $recaptcha */
+/** @var HeroiconsOutline $heroicons */
+
+$recaptcha = $viewModels->require(ReCaptcha::class);
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="w-full">
+    <div class="py-6 prose">
+        <h2 class="text-2xl font-bold mb-4"><?= $escaper->escapeHtml(__('Become a Dealer')) ?></h2>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <?= $heroicons->informationCircleHtml('h-5 w-5 text-blue-400') ?>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        <?= $escaper->escapeHtml(__('After registration, your account will be verified. Once approved, you will gain access to dealer pricing and exclusive promotions.')) ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?= $block->getChildHtml('form_fields_before') ?>
+    <?= $block->getChildHtml('customer.form.register.extra') ?>
+    <form class="form create account form-create-account"
+          action="<?= $escaper->escapeUrl($block->getPostActionUrl()) ?>"
+          method="post"
+          id="form-validate"
+          enctype="multipart/form-data"
+          autocomplete="off"
+          x-data="{
+              password: '',
+              confirmPassword: '',
+              onChange() {
+                  const password = document.getElementById('password');
+                  const confirm = document.getElementById('password-confirmation');
+                  if (confirm.value && password.value !== confirm.value) {
+                      confirm.setCustomValidity('<?= $escaper->escapeJs(__('Passwords do not match')) ?>');
+                  } else {
+                      confirm.setCustomValidity('');
+                  }
+              }
+          }"
+          @submit.prevent="document.getElementById('form-validate').submit()">
+
+        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+
+        <fieldset class="fieldset create info">
+            <legend class="legend"><span><?= $escaper->escapeHtml(__('Personal Information')) ?></span></legend>
+            <br>
+            <input type="hidden" name="success_url" value="<?= $escaper->escapeUrl($block->getSuccessUrl()) ?>">
+            <input type="hidden" name="error_url" value="<?= $escaper->escapeUrl($block->getErrorUrl()) ?>">
+
+            <?= $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Name::class)->setObject($block->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>
+
+            <div class="field taxvat required">
+                <label for="taxvat" class="label"><span><?= $escaper->escapeHtml(__('VAT Number')) ?></span></label>
+                <div class="control">
+                    <input type="text" name="taxvat" id="taxvat" value="<?= $block->escapeHtmlAttr($block->getFormData()->getTaxvat()) ?>" title="<?= $escaper->escapeHtmlAttr(__('VAT Number')) ?>" class="input-text required-entry w-full" required>
+                </div>
+            </div>
+
+            <?php if ($block->isNewsletterEnabled()): ?>
+                <div class="field choice newsletter flex items-center mt-4">
+                    <input type="checkbox" name="is_subscribed" title="<?= $escaper->escapeHtmlAttr(__('Sign Up for Newsletter')) ?>" value="1" id="is_subscribed"<?php if ($block->getFormData()->getIsSubscribed()): ?> checked="checked"<?php endif; ?> class="checkbox h-4 w-4 text-primary border-gray-300 rounded">
+                    <label for="is_subscribed" class="label ml-2"><span><?= $escaper->escapeHtml(__('Sign Up for Newsletter')) ?></span></label>
+                </div>
+            <?php endif ?>
+
+            <?= $block->getChildHtml('credential_to_be_removed') ?>
+        </fieldset>
+
+        <fieldset class="fieldset create account mt-8" data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+            <legend class="legend"><span><?= $escaper->escapeHtml(__('Sign-in Information')) ?></span></legend>
+            <br>
+            <div class="field required">
+                <label for="email_address" class="label"><span><?= $escaper->escapeHtml(__('Email')) ?></span></label>
+                <div class="control">
+                    <input type="email" name="email" autocomplete="email" id="email_address" value="<?= $escaper->escapeHtmlAttr($block->getFormData()->getEmail()) ?>" title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>" class="input-text w-full" required>
+                </div>
+            </div>
+            <div class="field password required mt-4">
+                <label for="password" class="label"><span><?= $escaper->escapeHtml(__('Password')) ?></span></label>
+                <div class="control">
+                    <input type="password" name="password" id="password"
+                           title="<?= $escaper->escapeHtmlAttr(__('Password')) ?>"
+                           class="input-text w-full"
+                           required
+                           autocomplete="off"
+                           @input="onChange">
+                </div>
+            </div>
+            <div class="field confirmation required mt-4">
+                <label for="password-confirmation" class="label"><span><?= $escaper->escapeHtml(__('Confirm Password')) ?></span></label>
+                <div class="control">
+                    <input type="password" name="password_confirmation" title="<?= $escaper->escapeHtmlAttr(__('Confirm Password')) ?>" id="password-confirmation" class="input-text w-full" required autocomplete="off" @input="onChange">
+                </div>
+            </div>
+            <div class="mt-4">
+                <?= $recaptcha->getInputHtml(ReCaptcha::RECAPTCHA_FORM_ID_CUSTOMER_CREATE) ?>
+            </div>
+        </fieldset>
+        <div class="actions-toolbar mt-8">
+            <div class="primary">
+                <button type="submit" class="action submit primary btn btn-primary" title="<?= $escaper->escapeHtmlAttr(__('Create an Account')) ?>"><span><?= $escaper->escapeHtml(__('Create an Account')) ?></span></button>
+            </div>
+            <div class="secondary mt-4">
+                <a class="action back text-secondary" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>"><span><?= $escaper->escapeHtml(__('Back')) ?></span></a>
+            </div>
+        </div>
+    </form>
+</div>
