@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="hyva_form_validation"/>
+    <update handle="amgdpr_popup" />
     <body>
         <referenceContainer name="content">
             <!-- Keep class name with typo "registation-container" for backwards compatibility -->
@@ -11,7 +12,9 @@
                         <argument name="post_code_config" xsi:type="object">Magento\Customer\Block\DataProviders\PostCodesPatternsAttributeData</argument>
                         <argument name="viewModelRecaptcha" xsi:type="object">Hyva\Theme\ViewModel\ReCaptcha</argument>
                     </arguments>
-                    <container name="form.additional.info" as="form_additional_info"/>
+                    <container name="form.additional.info" as="form_additional_info">
+                        <block class="Amasty\Gdpr\Block\Checkbox" name="amasty_gdpr_create_account"/>
+                    </container>
                     <container name="fieldset.create.info.additional" as="fieldset_create_info_additional"/>
                     <container name="customer.form.register.fields.before" as="form_fields_before" label="Form Fields Before" htmlTag="div" htmlClass="customer-form-before"/>
                 </block>
