@@ -193,20 +193,6 @@ $isAutocompleteEnabled = $block->getConfig('customer/password/autocomplete_on_st
                                 </template>
                             </button>
                         </div>
-                        <div class="self-center mt-0.5">
-                            <div
-                                id="password-strength-meter-container"
-                                data-role="password-strength-meter"
-                                aria-live="polite"
-                            >
-                                <div id="password-strength-meter" class="password-strength-meter">
-                                    <?= $escaper->escapeHtml(__('Password Strength')) ?>:
-                                    <span id="password-strength-meter-label" data-role="password-strength-meter-label">
-                                            <?= $escaper->escapeHtml(__('No Password')) ?>
-                                        </span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="field field-reserved required">
